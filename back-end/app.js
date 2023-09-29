@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const app = express() // instantiate an Express object
 app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })) // log all incoming requests, except when in unit test mode.  morgan has a few logging default styles - dev is a nice concise color-coded style
 app.use(cors()) // allow cross-origin resource sharing
+app.use('/static', express.static('public'));
 
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()) // decode JSON-formatted incoming POST data
@@ -21,6 +22,15 @@ mongoose
 // load the dataabase models we want to deal with
 const { Message } = require('./models/Message')
 const { User } = require('./models/User')
+const { AboutUs } = require('./models/AboutUs')
+
+app.get('/about-us', (req, res) => {
+  res.json({ 
+    name: "Lara Kim",
+    description: "Hello, my name is Lara Kim, and I'm a senior studying Computer Science and Mathematics at NYU. I was born in Syracuse, New York, but moved to Seoul, Korea when I was four years old. I went to and graduated from an international school in Korea. \n My interests include playing sports such as soccer and volleyball, traveling, watching movies/tv shows, and of course, working on coding projects. I was first introduced to coding and software development during highschool, when I took AP courses on Computer Science. I started off creating basic, simple apps and websites through these courses and found that this field of study involves both creativity as well as rationality. As a person who values both facets, I felt I would enjoy a career in software engineering. I hope to continue to grow as a software engineer, and believe that this course will help me do so. \n Thanks for reading!",
+    imageURL: "http://localhost:5002/static/images/me.jpg"
+  });
+});
 
 // a route to handle fetching all messages
 app.get('/messages', async (req, res) => {
